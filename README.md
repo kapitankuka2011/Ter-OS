@@ -26,11 +26,11 @@ Requirements:
 - grub-mkrescue
 - LD command
 
-First we need to compile the source code
+First we need to compile the source code<br />
     ```make```
-and when its done you are done with the compiling to tun it use:
+<br /><br />and when its done you are done with the compiling to tun it use:<br />
     ```make run```
-then you can clean up a bit:
+<br /><br />then you can clean up a bit:<br />
     ```make clean```
 
 if you are on windows then maybe try wsl
