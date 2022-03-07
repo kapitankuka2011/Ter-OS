@@ -49,6 +49,11 @@ BOOL is_echo(char *b) {
 
 void shutdown() {
     int brand = cpuid_info(0);
+    printf("Shutting down...");
+    int c, d;
+    for (c = 1; c <= 21000; c++)
+       for (d = 1; d <= 9000; d++)
+       {}
     // QEMU
     if (brand == BRAND_QEMU)
         outports(0x604, 0x2000);
@@ -57,15 +62,13 @@ void shutdown() {
         outports(0x4004, 0x3400);
 }
 
-void kmain() {
+void kernel() {
     char buffer[255];
-    const char *shell = "TerOS@terminal>";
-    const char *ver = "Beta";
-
-
+    const char *shell = "user@TerOS>";
+    const char *ver = "Pre-Release";
     console_init(COLOR_WHITE, COLOR_BLACK);
 
-    printf("Starting OS...\n");
+    printf("Starting...\n");
 
     int c, d;
    
@@ -73,10 +76,10 @@ void kmain() {
        for (d = 1; d <= 20000; d++)
        {}
 
-    printf("Starting the components...\n");
+    printf("Initializing components...\n");
 
-    for (c = 1; c <= 21000; c++)
-       for (d = 1; d <= 21000; d++)
+    for (c = 1; c <= 23000; c++)
+       for (d = 1; d <= 23000; d++)
        {}
 
     gdt_init();
@@ -84,9 +87,7 @@ void kmain() {
     keyboard_init();
 
     
-
-
-    printf("Started!\n");
+    printf("Initialized the components!\n");
 
     for (c = 1; c <= 10000; c++)
        for (d = 1; d <= 10000; d++)
@@ -104,22 +105,91 @@ void kmain() {
             cpuid_info(1);
         } else if(strcmp(buffer, "help") == 0) {
             printf("MSISC-TerOS\n");
-            printf("Commands: help, clear/cls, cpuinfo, echo, shutdown, creators, info\n");
+            printf("Commands:help,clear/cls,cpuinfo,echo,shutdown/shd,creators,info,exit\n");
+            printf("Testing commands: panict\n");
         } else if(is_echo(buffer)) {
             printf("%s\n", buffer + 5);
-        } else if(strcmp(buffer, "shutdown") == 0) {
+        } else if(strcmp(buffer, "shutdown") == 0 || strcmp(buffer, "shd") == 0) {
             shutdown();
         } else if(strcmp(buffer, "creators") == 0) {
-            printf("Project Owners: MSISC Prod.\nProgrammer: Kuba\nInspiration: installing linux\n");
+            printf("Project Owners: MSISC Prod.\nProgrammer/Tester: Kuba\nInspiration: installing linux\n");
         } else if(strcmp(buffer, "info") == 0) {
             printf("\nOS-Info:\nProgramming language: The C Programming Language\nCreation date: 3.6.22\nBootLoader: GNU GRUB\n\n");
         } else if(strcmp(buffer, "clear") == 0 || strcmp(buffer, "cls") == 0) {
             console_clear(COLOR_WHITE, COLOR_BLACK);
+        } else if(strcmp(buffer, "panict") == 0) {
+            panic(1);
+        } else if(strcmp(buffer, "exit") == 0) {
+            printf("Exiting...");
+            while (1)
+            {
+                console_clear(COLOR_WHITE, COLOR_BLACK);
+                for (c = 1; c <= 10000; c++)
+                    for (d = 1; d <= 10000; d++)
+                    {}
+                printf("Expection: failed");
+                panic(1);   
+            }
+        } else if(strcmp(buffer, "tester") == 0) {
+            tester(0);
         } else {
-            printf("failed to execute (NOT_FOUND): %s\n", buffer);
+            printf("invalid command: %s\n", buffer);
         }
     }
 }
 
 
+void bpanic() {
+    console_init(COLOR_WHITE, COLOR_BLACK);
+    console_clear(COLOR_WHITE, COLOR_BLACK);
+    int c, d;
+    while (1)
+    {
+        for (c = 1; c <= 21000; c++)
+            for (d = 1; d <= 20000; d++)
+            {}
+        printf("\nExpection: kernel panic");
+    }
+}
 
+
+void cpanic() {
+    int c, d;
+    while (1)
+    {
+        for (c = 1; c <= 21000; c++)
+            for (d = 1; d <= 20000; d++)
+            {}
+        printf("\nExpection: kernel panic");
+    }
+}
+
+void panic(int c) {
+    if (c == 1)
+    {
+        cpanic();
+    } else {
+        bpanic();
+    }
+}
+
+void tester(int i) {
+    if(i == 1) {
+        console_init(COLOR_WHITE, COLOR_BLACK);
+        console_clear(COLOR_WHITE, COLOR_BLACK);
+    }
+    int c, d;
+    char buffer1[255];
+    printf("Initializing tester...\n");
+
+    for (c = 1; c <= 23000; c++)
+       for (d = 1; d <= 23000; d++)
+       {}
+
+    printf("Options:\n1. get-brand\n");
+    memset(buffer1, 0, sizeof(buffer1));
+    getstr_bound(buffer1, 0);
+    if(strcmp(buffer1, "1") == 0) {
+        cpuid_info(1);
+    }
+}

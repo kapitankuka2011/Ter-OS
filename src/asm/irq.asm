@@ -2,11 +2,11 @@ section .text
     extern isr_irq_handler
 
 irq_handler:
-    pusha                 ; push all registers
+    pusha
     mov ax, ds
-    push eax              ; save ds
+    push eax
 
-    mov ax, 0x10          ; load kernel data segment
+    mov ax, 0x10
     mov ds, ax
     mov es, ax
     mov fs, ax
@@ -16,16 +16,16 @@ irq_handler:
     call isr_irq_handler
     pop esp
 
-    pop ebx                ; restore kernel data segment
+    pop ebx
     mov ds, bx
     mov es, bx
     mov fs, bx
     mov gs, bx
 
-    popa                ; restore all registers
-    add esp, 0x8        ; restore stack for erro no been pushed
+    popa
+    add esp, 0x8
 
-    sti                 ; re-enable interrupts
+    sti
     iret
 
 

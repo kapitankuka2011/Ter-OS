@@ -134,4 +134,7 @@ $(OBJ)/kernel.o : $(SRC)/kernel.c
 clean:
 	rm -f $(OBJ)/*.o
 	rm -f $(ASM_OBJ)/*.o
-	rm -rf $(OUT)/*
+#rm -rf $(OUT)/*
+
+run:
+	qemu-system-x86_64 $(OUT)/TerOS.iso
