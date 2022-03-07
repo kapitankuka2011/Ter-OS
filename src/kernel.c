@@ -62,12 +62,8 @@ void kmain() {
     const char *shell = "TerOS@terminal>";
     const char *ver = "Beta";
 
-    gdt_init();
-    idt_init();
 
     console_init(COLOR_WHITE, COLOR_BLACK);
-
-    keyboard_init();
 
     printf("Starting OS...\n");
 
@@ -76,6 +72,19 @@ void kmain() {
     for (c = 1; c <= 20000; c++)
        for (d = 1; d <= 20000; d++)
        {}
+
+    printf("Starting the components...\n");
+
+    for (c = 1; c <= 21000; c++)
+       for (d = 1; d <= 21000; d++)
+       {}
+
+    gdt_init();
+    idt_init();
+    keyboard_init();
+
+    
+
 
     printf("Started!\n");
 
