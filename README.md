@@ -10,10 +10,10 @@ Requirements:
 - Iso file (in out directory)
 
 Linux:
-    make run
+    ```make run```
 
 Windows:
-    qemu-system-x86-64 out\TerOS.iso
+    ```qemu-system-x86-64 out\TerOS.iso```
 
 # Compiling
 
@@ -27,10 +27,10 @@ Requirements:
 - LD command
 
 First we need to compile the source code
-    make
+    ```make```
 and when its done you are done with the compiling to tun it use:
-    make run
+    ```make run```
 then you can clean up a bit:
-    make clean
+    ```make clean```
 
 if you are on windows then maybe try wsl
