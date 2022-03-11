@@ -5,6 +5,7 @@
 #include "idt.h"
 #include "keyboard.h"
 #include "io_ports.h"
+#include "timer.h"
 
 #define BRAND_QEMU  1
 #define BRAND_VBOX  2
@@ -50,10 +51,7 @@ BOOL is_echo(char *b) {
 void shutdown() {
     int brand = cpuid_info(0);
     printf("Shutting down...");
-    int c, d;
-    for (c = 1; c <= 21000; c++)
-       for (d = 1; d <= 9000; d++)
-       {}
+    sleep(2);
     // QEMU
     if (brand == BRAND_QEMU)
         outports(0x604, 0x2000);
@@ -62,39 +60,74 @@ void shutdown() {
         outports(0x4004, 0x3400);
 }
 
+void bpanic() {
+    timer_init();
+    console_init(COLOR_WHITE, COLOR_BLACK);
+    console_clear(COLOR_WHITE, COLOR_BLACK);
+    while (1)
+    {
+        sleep(2);
+        printf("\nSystem>: kernel panic");
+    }
+}
+
+
+void cpanic() {
+    vga_disable_cursor();
+    while (1)
+    {
+        sleep(2);
+        printf("\nSystem>: kernel panic");
+    }
+}
+
+void panic(int c) {
+    if (c == 1)
+    {
+        cpanic();
+    } else {
+        bpanic();
+    }
+}
+
+void oserr(char *msg[]) {
+    vga_disable_cursor();
+    printf("\nSystemE>: %s", msg);
+    asm volatile("cli");
+    asm volatile("hlt");
+}
+
+void oscerr(char *msg[]) {
+    vga_disable_cursor();
+    printf("\nSystemE!>: %s", msg);
+    asm volatile("cli");
+    asm volatile("hlt");
+}
+
 void kernel() {
     char buffer[255];
     const char *shell = "user@TerOS>";
     const char *ver = "Pre-Release";
+    gdt_init();
+    idt_init();
+    timer_init();
+    keyboard_init();
     console_init(COLOR_WHITE, COLOR_BLACK);
 
     printf("Starting...\n");
-
-    int c, d;
    
-    for (c = 1; c <= 20000; c++)
-       for (d = 1; d <= 20000; d++)
-       {}
+    sleep(1);
 
     printf("Initializing components...\n");
 
-    for (c = 1; c <= 23000; c++)
-       for (d = 1; d <= 23000; d++)
-       {}
-
-    gdt_init();
-    idt_init();
-    keyboard_init();
-
+    sleep(4);
     
     printf("Initialized the components!\n");
 
-    for (c = 1; c <= 10000; c++)
-       for (d = 1; d <= 10000; d++)
-       {}
+    sleep(1);
 
     console_clear(COLOR_WHITE, COLOR_BLACK);
-    printf("TerOS %s\n", ver);
+    printf("MSISC TerOS %s\n", ver);
     while(1) {
         printf(shell);
         memset(buffer, 0, sizeof(buffer));
@@ -106,7 +139,7 @@ void kernel() {
         } else if(strcmp(buffer, "help") == 0) {
             printf("MSISC-TerOS\n");
             printf("Commands:help,clear/cls,cpuinfo,echo,shutdown/shd,creators,info,exit\n");
-            printf("Testing commands: panict\n");
+            printf("Testing commands: panict, errt, cerrt\n");
         } else if(is_echo(buffer)) {
             printf("%s\n", buffer + 5);
         } else if(strcmp(buffer, "shutdown") == 0 || strcmp(buffer, "shd") == 0) {
@@ -121,75 +154,16 @@ void kernel() {
             panic(1);
         } else if(strcmp(buffer, "exit") == 0) {
             printf("Exiting...");
-            while (1)
-            {
-                console_clear(COLOR_WHITE, COLOR_BLACK);
-                for (c = 1; c <= 10000; c++)
-                    for (d = 1; d <= 10000; d++)
-                    {}
-                printf("Expection: failed");
-                panic(1);   
-            }
-        } else if(strcmp(buffer, "tester") == 0) {
-            tester(0);
+            sleep(2);
+            printf("nop state");
+            for (;;)
+                ;
+        } else if(strcmp(buffer, "errt") == 0) {
+            oserr("ukn");
+        } else if(strcmp(buffer, "cerrt") == 0) {
+            oscerr("ukn");
         } else {
             printf("invalid command: %s\n", buffer);
         }
-    }
-}
-
-
-void bpanic() {
-    console_init(COLOR_WHITE, COLOR_BLACK);
-    console_clear(COLOR_WHITE, COLOR_BLACK);
-    int c, d;
-    while (1)
-    {
-        for (c = 1; c <= 21000; c++)
-            for (d = 1; d <= 20000; d++)
-            {}
-        printf("\nExpection: kernel panic");
-    }
-}
-
-
-void cpanic() {
-    int c, d;
-    while (1)
-    {
-        for (c = 1; c <= 21000; c++)
-            for (d = 1; d <= 20000; d++)
-            {}
-        printf("\nExpection: kernel panic");
-    }
-}
-
-void panic(int c) {
-    if (c == 1)
-    {
-        cpanic();
-    } else {
-        bpanic();
-    }
-}
-
-void tester(int i) {
-    if(i == 1) {
-        console_init(COLOR_WHITE, COLOR_BLACK);
-        console_clear(COLOR_WHITE, COLOR_BLACK);
-    }
-    int c, d;
-    char buffer1[255];
-    printf("Initializing tester...\n");
-
-    for (c = 1; c <= 23000; c++)
-       for (d = 1; d <= 23000; d++)
-       {}
-
-    printf("Options:\n1. get-brand\n");
-    memset(buffer1, 0, sizeof(buffer1));
-    getstr_bound(buffer1, 0);
-    if(strcmp(buffer1, "1") == 0) {
-        cpuid_info(1);
     }
 }

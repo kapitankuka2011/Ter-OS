@@ -85,7 +85,7 @@ static void print_registers(REGISTERS *reg) {
 void isr_exception_handler(REGISTERS reg) {
     if (reg.int_no < 32) {
         //printf("EXCEPTION: %s\n", exception_messages[reg.int_no]);
-        printf("Expection: %s\n", exception_messages[reg.int_no]);
+        printf("System>: %s\n", exception_messages[reg.int_no]);
         //print_registers(&reg);
         for (;;)
             ;
