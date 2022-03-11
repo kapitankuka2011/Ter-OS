@@ -250,5 +250,3 @@ void getstr_bound(char *buffer, uint8 bound) {
         }
     }
 }
-
-

@@ -27,9 +27,7 @@ section .text
 _start:
     mov esp, stack_top
     extern kernel
-    ;extern panic
     push ebx
     call kernel
-    ;call panic
 loop:
     jmp loop
