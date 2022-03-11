@@ -65,7 +65,7 @@ void bpanic() {
     while (1)
     {
         sleep(2);
-        printf("\nSystem>: kernel panic");
+        printf("\nSystem>: Kernel Panic");
     }
 }
 
@@ -75,7 +75,7 @@ void cpanic() {
     while (1)
     {
         sleep(2);
-        printf("\nSystem>: kernel panic");
+        printf("\nSystem>: Kernel Panic");
     }
 }
 
@@ -118,7 +118,7 @@ void kernel() {
 
     printf("Initializing components...\n");
 
-    sleep(4);
+    sleep(2);
     
     printf("Initialized the components!\n");
 
