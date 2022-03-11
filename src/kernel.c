@@ -52,11 +52,9 @@ void shutdown() {
     int brand = cpuid_info(0);
     printf("Shutting down...");
     sleep(2);
-    // QEMU
     if (brand == BRAND_QEMU)
         outports(0x604, 0x2000);
     else
-        // VirtualBox
         outports(0x4004, 0x3400);
 }
 
