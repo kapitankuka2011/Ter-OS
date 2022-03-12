@@ -95,6 +95,10 @@ void keyboard_handler(REGISTERS *r) {
                 g_shift_pressed = TRUE;
                 break;
 
+            case SCAN_CODE_KEY_RIGHT_SHIFT:
+                g_shift_pressed = TRUE;
+                break;
+
             default:
                 g_ch = g_scan_code_chars[scancode];
                 // if caps in on, covert to upper

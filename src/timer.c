@@ -43,18 +43,6 @@ void timer_handler(REGISTERS* r) {
     }
 }
 
-void timer_register_function(TIMER_FUNCTION function, TIMER_FUNC_ARGS *args) {
-    uint32 index = 0;
-    if (function == NULL || args == NULL) {
-        printf("ERROR: failed to register timer function %x\n", function);
-        return;
-    }
-    index = (++g_timer_function_manager.current_index) % MAXIMUM_TIMER_FUNCTIONS;
-    g_timer_function_manager.current_index = index;
-    g_timer_function_manager.functions[index] = function;
-    memcpy(&g_timer_function_manager.func_args[index], args, sizeof(TIMER_FUNC_ARGS));
-}
-
 void timer_init() {
     // IRQ0 will fire 100 times per second
     timer_set_frequency(100);

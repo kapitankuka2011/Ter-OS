@@ -51,11 +51,13 @@ BOOL is_echo(char *b) {
 void shutdown() {
     int brand = cpuid_info(0);
     printf("Shutting down...");
-    sleep(2);
+    sleep(1);
     if (brand == BRAND_QEMU)
         outports(0x604, 0x2000);
-    else
+    else if(brand == BRAND_VBOX)
         outports(0x4004, 0x3400);
+    else
+        printf("Unsupported hardware");
 }
 
 void bpanic() {
@@ -145,7 +147,7 @@ void kernel() {
         } else if(strcmp(buffer, "creators") == 0) {
             printf("Project Owners: MSISC Prod.\nProgrammer/Tester: Kuba\nInspiration: installing linux\n");
         } else if(strcmp(buffer, "info") == 0) {
-            printf("\nOS-Info:\nProgramming language: The C Programming Language\nCreation date: 3.6.22\nBootLoader: GNU GRUB\n\n");
+            printf("\nOS-Info:\nProgramming language: The C Programming Language\nCreation date: 3.6.22\nBootloader: GNU GRUB 2.04\n\n");
         } else if(strcmp(buffer, "clear") == 0 || strcmp(buffer, "cls") == 0) {
             console_clear(COLOR_WHITE, COLOR_BLACK);
         } else if(strcmp(buffer, "panict") == 0) {
@@ -153,13 +155,19 @@ void kernel() {
         } else if(strcmp(buffer, "exit") == 0) {
             printf("Exiting...");
             sleep(2);
-            printf("nop state");
-            for (;;)
-                ;
+            printf("\nExited!");
+            while (1)
+            {
+                asm volatile("nop");
+            }
+            sleep(2);
+            asm volatile("cli");
+            asm volatile("hlt");
+            
         } else if(strcmp(buffer, "errt") == 0) {
-            oserr("ukn");
+            oserr("undefined");
         } else if(strcmp(buffer, "cerrt") == 0) {
-            oscerr("ukn");
+            oscerr("undefined");
         } else {
             printf("invalid command: %s\n", buffer);
         }
