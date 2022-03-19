@@ -56,8 +56,12 @@ void shutdown() {
         outports(0x604, 0x2000);
     else if(brand == BRAND_VBOX)
         outports(0x4004, 0x3400);
-    else
-        printf("Unsupported hardware");
+    else {
+        printf("Unsupported hardware, halting the cpu...");
+        vga_disable_cursor();
+        asm volatile("cli");
+        asm volatile("hlt");
+    }
 }
 
 void bpanic() {
@@ -90,14 +94,14 @@ void panic(int c) {
     }
 }
 
-void oserr(char *msg[]) {
+void oserr(char msg[]) {
     vga_disable_cursor();
     printf("\nSystemE>: %s", msg);
     asm volatile("cli");
     asm volatile("hlt");
 }
 
-void oscerr(char *msg[]) {
+void oscerr(char msg[]) {
     vga_disable_cursor();
     printf("\nSystemE!>: %s", msg);
     asm volatile("cli");
@@ -107,7 +111,7 @@ void oscerr(char *msg[]) {
 void kernel() {
     char buffer[255];
     const char *shell = "user@TerOS>";
-    const char *ver = "Pre-Release";
+    const char *ver = "0.1";
     gdt_init();
     idt_init();
     timer_init();
@@ -127,7 +131,7 @@ void kernel() {
     sleep(1);
 
     console_clear(COLOR_WHITE, COLOR_BLACK);
-    printf("MSISC TerOS %s\n", ver);
+    printf("MSISC-TerOS-%s\n", ver);
     while(1) {
         printf(shell);
         memset(buffer, 0, sizeof(buffer));
