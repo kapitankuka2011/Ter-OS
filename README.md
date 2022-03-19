@@ -1,6 +1,6 @@
 # TerOS
 
-is a operating system.
+TerOS (TerminalOperatingSystem) is a os
 
 # Running it
 
@@ -26,6 +26,7 @@ Requirements:
 - grub-mkrescue
 - LD command
 
+##### Linux
 First we need to compile the source code<br />
     ```make```
 <br /><br />and when its done you are done with the compiling to tun it use:<br />
@@ -33,7 +34,11 @@ First we need to compile the source code<br />
 <br /><br />then you can clean up a bit:<br />
     ```make clean```
 
-if you are on windows then maybe try wsl
+##### Windows
+use WSL maybe (wsl fails to make 90% for me)
+
+##### macOS
+no idea how
 
 
 # Real hardware
