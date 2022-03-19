@@ -34,3 +34,8 @@ First we need to compile the source code<br />
     ```make clean```
 
 if you are on windows then maybe try wsl
+
+
+# Real hardware
+###### (it was done on creator's personal laptop)
+to run it is possible, i mean just burn the iso and plug it in, BUT keyboard can not work to fix it just run with "Ventoy"
